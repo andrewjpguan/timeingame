@@ -3,7 +3,8 @@ from decouple import config
 import math
 import json
 
-
+KEY = config("STEAM_API_KEY")
+steam = Steam(KEY)
 
 #digit is # after .
 def truncate(number, digits) -> float:
@@ -18,25 +19,16 @@ def getHeaderImage(appid) -> str:
     return appDataJson[str(appid)]["data"]["header_image"]
 
 def steamHours(steamid) -> str:
-    KEY = config("STEAM_API_KEY")
-    steam = Steam(KEY)
     # arguments: steamid
     # my steam id: 76561198431671719
     user = steam.users.get_owned_games(steamid)
     games = user["games"]
 
     result = ""
-
     for attribute in games:
          result += (getHeaderImage(attribute["appid"]) + "  "  + attribute["name"] 
             + "  " + str(truncate(attribute["playtime_forever"]/60.0, 1)) + " hours\n")
          
     return result
-
-
-
-
-
-
     
 

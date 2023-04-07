@@ -18,7 +18,7 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
-@api.route('/getSteamHours', methods=['POST', 'GET'])
+@api.route('/getSteamHours', methods=['GET'])
 def getSteamHours():
 
     id = request.args.get("id")
