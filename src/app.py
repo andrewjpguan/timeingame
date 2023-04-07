@@ -17,6 +17,8 @@ from api.commands import setup_commands
 ENV = os.getenv("FLASK_ENV")
 static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../public/')
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+app.config['DEBUG'] = True
 app.url_map.strict_slashes = False
 
 # database condiguration
