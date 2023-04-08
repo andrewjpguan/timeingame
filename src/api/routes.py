@@ -21,7 +21,7 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 blizzardBaseApiUrl = 'https://oauth.battle.net'
 blizzardClientId = os.getenv("BLIZZARD_CLIENT_ID")
 blizzardClientSecret = os.getenv("BLIZZARD_CLIENT_SECRET")
-blizzardRedirectUri='https://localhost:3001/api/blizzardAuthorization'
+blizzardRedirectUri='http://localhost:3001/api/blizzardAuthorization'
 blizzardScope = ['wow.profile', 'sc2.profile', 'd3.profile']
 blizzardTokenUrl = 'https://oauth.battle.net/token'
 blizzardAuthorizeUrl = 'https://oauth.battle.net/authorize'
@@ -36,8 +36,8 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
-@api.route('/steamId', methods=['GET'])
-def steamId():
+@api.route('/profile', methods=['GET'])
+def profile():
 
     id = request.args.get("id")
 
@@ -63,8 +63,9 @@ def blizzardAuthorization():
         blizzardTokenUrl,
         client_secret=blizzardClientSecret,
         scope=blizzardScope,
-        authorization_response=request.url
+        authorization_response=request.url,
+        code=request.url.split('code=')[1].split('&')[0]
     )
     session['blizzardToken'] = token
     print(token)
-    return 'Thanks for granting us authorization. We are logging you in! You can now visit <a href="/profile">/profile</a>'
+    return 'Thanks for granting us authorization. We are logging you in! You can now visit <a href="/blizardProfile">/profile</a>'
