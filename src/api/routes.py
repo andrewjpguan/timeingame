@@ -8,6 +8,8 @@ from requests_oauthlib import OAuth2Session
 from api.models import db, User
 from api.utils import generate_sitemap, APIException
 from api.steamHours import steamHours
+from json import dumps
+from urllib.parse import urlencode
 
 api = Blueprint('api', __name__)
 
@@ -15,9 +17,15 @@ api = Blueprint('api', __name__)
 oauth = OAuth()
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
-#steamOAuth setup
+#steam OpenID setup
+steamOpenidUrl = 'https://steamcommunity.com/openid/login'
+steamOpenidNs = 'http://specs.openid.net/auth/2.0'
+steamOpenidIdentity= 'http://specs.openid.net/auth/2.0/identifier_select' #wtf is this
+steamOpenidClaimedId= 'http://specs.openid.net/auth/2.0/identifier_select'
+steamOpenidReturn = 'http://localhost:3001/api/steamAuthorization'
+steamOpenidRealm = 'http://localhost:3001' 
 
-#blizzardOAuth setup
+#blizzard OAuth setup
 blizzardBaseApiUrl = 'https://oauth.battle.net'
 blizzardClientId = os.getenv("BLIZZARD_CLIENT_ID")
 blizzardClientSecret = os.getenv("BLIZZARD_CLIENT_SECRET")
@@ -39,14 +47,33 @@ def handle_hello():
 @api.route('/profile', methods=['GET'])
 def profile():
 
-    id = request.args.get("id")
-
     response_body = {
 
-        "message": steamHours(id)
+        "message": 'WIP'
     }
 
     return jsonify(response_body), 200
+
+@api.route("/steamLogin")
+def steamLogin():
+    
+    params = {
+    'openid.ns': steamOpenidNs,
+    'openid.identity': steamOpenidIdentity,
+    'openid.claimed_id': steamOpenidClaimedId, #steamid
+    'openid.mode': 'checkid_setup',
+    'openid.return_to': steamOpenidReturn,
+    'openid.realm': steamOpenidRealm
+    }
+
+    query_string = urlencode(params)
+    login_url = steamOpenidUrl + "?" + query_string
+    return '<a href="' + login_url + '">Login with steam</a>'
+
+@api.route("/steamAuthorization")
+def steamAuthorization():
+    print(request.args)
+    return steamHours(request.args['openid.claimed_id'].split('/')[5])
 
 @api.route('/blizzardLogin')
 def blizzardLogin():
