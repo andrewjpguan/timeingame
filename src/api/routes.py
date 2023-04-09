@@ -72,8 +72,9 @@ def steamLogin():
 
 @api.route("/steamAuthorization")
 def steamAuthorization():
-    print(request.args)
-    return steamHours(request.args['openid.claimed_id'].split('/')[5])
+    steamid = request.args['openid.claimed_id'].split('/')[5]
+    session['steamid'] = steamid
+    return steamHours(steamid)
 
 @api.route('/blizzardLogin')
 def blizzardLogin():
