@@ -26,7 +26,6 @@ steamOpenidReturn = 'http://localhost:3001/api/steamAuthorization'
 steamOpenidRealm = 'http://localhost:3001' 
 
 #blizzard OAuth setup
-blizzardBaseApiUrl = 'https://oauth.battle.net'
 blizzardClientId = os.getenv("BLIZZARD_CLIENT_ID")
 blizzardClientSecret = os.getenv("BLIZZARD_CLIENT_SECRET")
 blizzardRedirectUri='http://localhost:3001/api/blizzardAuthorization'
@@ -35,7 +34,6 @@ blizzardTokenUrl = 'https://oauth.battle.net/token'
 blizzardAuthorizeUrl = 'https://oauth.battle.net/authorize'
 
 #epic OAuth setup
-epicBaseApiUrl = 'https://oauth.battle.net'
 epicClientId = os.getenv("EPIC_CLIENT_ID")
 epicClientSecret = os.getenv("EPIC_CLIENT_SECRET")
 epicRedirectUri='http://localhost:3001/api/epicAuthorization'
