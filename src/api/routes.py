@@ -116,10 +116,11 @@ def epicLogin():
 @api.route('/epicAuthorization')
 def epicAuthorization():
     epic = OAuth2Session(epicClientId, redirect_uri=epicRedirectUri, state=session['epicState'], scope=epicScope)
+
     token = epic.fetch_token(
         epicTokenUrl,
-        client_secret=epicClientSecret,
-        scope=epicScope,
+        content_type='application/x-www-form-urlencoded',
+        Authorization='Basic ' + epicClientId + epicClientSecret,
         authorization_response=request.url,
         code=request.url.split('code=')[1].split('&')[0]
     )
