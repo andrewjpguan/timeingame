@@ -34,6 +34,15 @@ blizzardScope = ['wow.profile', 'sc2.profile', 'd3.profile']
 blizzardTokenUrl = 'https://oauth.battle.net/token'
 blizzardAuthorizeUrl = 'https://oauth.battle.net/authorize'
 
+#epic OAuth setup
+epicBaseApiUrl = 'https://oauth.battle.net'
+epicClientId = os.getenv("EPIC_CLIENT_ID")
+epicClientSecret = os.getenv("EPIC_CLIENT_SECRET")
+epicRedirectUri='http://localhost:3001/api/epicAuthorization'
+epicScope = ['basic_profile']
+epicTokenUrl = 'https://api.epicgames.dev/epic/oauth/v1/token'
+epicAuthorizeUrl = 'https://www.epicgames.com/id/authorize'
+
 
 @api.route('/hello', methods=['POST', 'GET'])
 def handle_hello():
@@ -80,13 +89,13 @@ def steamAuthorization():
 def blizzardLogin():
     oauth = OAuth2Session(blizzardClientId, redirect_uri=blizzardRedirectUri, scope=blizzardScope)
     login_url, state = oauth.authorization_url(blizzardAuthorizeUrl)
-    session['state'] = state
+    session['blizzardState'] = state
     print("Login url: %s" % login_url)
     return '<a href="' + login_url + '">Login with Blizzard</a>'
 
 @api.route('/blizzardAuthorization')
 def blizzardAuthorization():
-    blizzard = OAuth2Session(blizzardClientId, redirect_uri=blizzardRedirectUri, state=session['state'], scope=blizzardScope)
+    blizzard = OAuth2Session(blizzardClientId, redirect_uri=blizzardRedirectUri, state=session['blizzardState'], scope=blizzardScope)
     token = blizzard.fetch_token(
         blizzardTokenUrl,
         client_secret=blizzardClientSecret,
@@ -96,4 +105,26 @@ def blizzardAuthorization():
     )
     session['blizzardToken'] = token
     print(token)
-    return 'Thanks for granting us authorization. We are logging you in! You can now visit <a href="/blizardProfile">/profile</a>'
+    return 'Thanks for granting us authorization. We are logging you in! You can now visit <a href="/profile">/profile</a>'
+
+@api.route('/epicLogin')
+def epicLogin():
+    oauth = OAuth2Session(epicClientId, redirect_uri=epicRedirectUri, scope=epicScope)
+    login_url, state = oauth.authorization_url(epicAuthorizeUrl)
+    session['epicState'] = state
+    print("Login url: %s" % login_url)
+    return '<a href="' + login_url + '">Login with Epic</a>'
+
+@api.route('/epicAuthorization')
+def epicAuthorization():
+    epic = OAuth2Session(epicClientId, redirect_uri=epicRedirectUri, state=session['epicState'], scope=epicScope)
+    token = epic.fetch_token(
+        epicTokenUrl,
+        client_secret=epicClientSecret,
+        scope=epicScope,
+        authorization_response=request.url,
+        code=request.url.split('code=')[1].split('&')[0]
+    )
+    session['epicToken'] = token
+    print(token)
+    return 'Thanks for granting us authorization. We are logging you in! You can now visit <a href="/profile">/profile</a>'
