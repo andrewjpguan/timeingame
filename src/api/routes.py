@@ -23,7 +23,7 @@ steamOpenidNs = 'http://specs.openid.net/auth/2.0'
 steamOpenidIdentity= 'http://specs.openid.net/auth/2.0/identifier_select' #wtf is this
 steamOpenidClaimedId= 'http://specs.openid.net/auth/2.0/identifier_select'
 steamOpenidReturn = 'http://localhost:3001/api/steamAuthorization'
-steamOpenidRealm = 'http://localhost:3001' 
+steamOpenidRealm = 'http://localhost:3001'
 
 #blizzard OAuth setup
 blizzardClientId = os.getenv("BLIZZARD_CLIENT_ID")
@@ -63,7 +63,7 @@ def profile():
 
 @api.route("/steamLogin")
 def steamLogin():
-    
+
     params = {
     'openid.ns': steamOpenidNs,
     'openid.identity': steamOpenidIdentity,
@@ -103,7 +103,7 @@ def blizzardAuthorization():
     )
     session['blizzardToken'] = token
     print(token)
-    return 'Thanks for granting us authorization. We are logging you in! You can now visit <a href="/profile">/profile</a>'
+    return 'Thanks for granting us authorization. We are logging you in! You can now visit <a href="/api/profile">/api/profile</a>'
 
 @api.route('/epicLogin')
 def epicLogin():
@@ -126,4 +126,4 @@ def epicAuthorization():
     )
     session['epicToken'] = token
     print(token)
-    return 'Thanks for granting us authorization. We are logging you in! You can now visit <a href="/profile">/profile</a>'
+    return 'Thanks for granting us authorization. We are logging you in! You can now visit <a href="/api/profile">/api/profile</a>'
