@@ -8,7 +8,7 @@ steam = Steam(KEY)
 
 #digit is # after .
 def truncate(number, digits) -> float:
-    nbDecimals = len(str(number).split('.')[1]) 
+    nbDecimals = len(str(number).split('.')[1])
     if nbDecimals <= digits:
         return number
     stepper = 10.0 ** digits
@@ -22,13 +22,13 @@ def steamHours(steamid) -> str:
     # arguments: steamid
     # my steam id: 76561198431671719
     user = steam.users.get_owned_games(steamid)
+    if "games" not in user:
+        return "No games found."
     games = user["games"]
 
     result = ""
     for attribute in games:
-         result += (getHeaderImage(attribute["appid"]) + "  "  + attribute["name"] 
+         result += (getHeaderImage(attribute["appid"]) + "  "  + attribute["name"]
             + "  " + str(truncate(attribute["playtime_forever"]/60.0, 1)) + " hours\n")
-         
-    return result
-    
 
+    return result
