@@ -119,7 +119,10 @@ def epicAuthorization():
 
     token = epic.fetch_token(
         epicTokenUrl,
-        content_type='application/x-www-form-urlencoded',
+        # content_type='application/x-www-form-urlencoded',
+        header={
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
         Authorization='Basic ' + epicClientId + epicClientSecret,
         authorization_response=request.url,
         code=request.url.split('code=')[1].split('&')[0]
